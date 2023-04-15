@@ -9,16 +9,6 @@ mod syntax;
 mod tests;
 
 fn main() {
-    let file = fs::read_to_string("lexer.txt");
-    if file.is_err() {
-        panic!("{:?}", file.err());
-    }
-
-    let file_contents = file.ok().unwrap().as_str().to_owned();
-
-    let lexer = Lexer::new(&file_contents);
-    lexer.clone().parse();
-
-    let mut syntax = Syntax::new(lexer);
-    println!("lexer.txt syntax analyzer result: {:?}", syntax.check_validity());
+    let lexer = Lexer::new("hello+world");
+    println!("{:?}", Syntax::new(lexer).check_validity());
 }
