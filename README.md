@@ -56,5 +56,8 @@
     FACT -> FLOAT_LIT
     FACT -> ( EXPR )
 
+# LR Table
+    Located in lr_table.html
+
 # Denotational Semantics
     Located in denotational_semantics.txt
