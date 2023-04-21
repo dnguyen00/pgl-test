@@ -90,7 +90,7 @@ mod tests {
 
     #[test]
     fn stmt_declare_complex() {
-        let lexer = Lexer::new("DataType hello,test");
+        let lexer = Lexer::new("DataType hello,test,bob,world,hello");
     
         let mut syntax = Syntax::new(lexer);
         assert_eq!(syntax.check_validity(), true);

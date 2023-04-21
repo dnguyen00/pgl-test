@@ -23,6 +23,7 @@ pub enum Tokens {
     INTEGERS,
     FLOATS,
     SEMICOLON,
+    COMMA,
     LBRACKET,
     RBRACKET,
     EQUALITY,

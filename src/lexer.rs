@@ -35,6 +35,7 @@ impl Lexer<'_> {
         tokens.insert(Tokens::RBRACKET, "}");
         tokens.insert(Tokens::EQUALITY, "==");
         tokens.insert(Tokens::INEQUALITY, "!=");
+        tokens.insert(Tokens::COMMA, ",");
 
         return Lexer { to_lex: to_lex, position: 0, tokens_chars: tokens}
     }

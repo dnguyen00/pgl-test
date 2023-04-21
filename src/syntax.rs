@@ -192,7 +192,7 @@ impl Syntax<'_> {
                 break;
             }
 
-            if peek_token.clone().unwrap().token == Tokens::IDENTIFIER && peek_token.unwrap().lexeme == "," {
+            if peek_token.clone().unwrap().token == Tokens::COMMA {
                 self.lexer.next_token();
 
                 if self.lexer.peek_token().is_some() && self.lexer.peek_token().unwrap().token == Tokens::IDENTIFIER {

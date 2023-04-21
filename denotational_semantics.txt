@@ -1,0 +1,93 @@
+<if_stmt> --> if ( <bool_expr> ) <block>
+MeaningOf|IF_STMT(if ( <bool_expr> ) <block>, s)
+    if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == error)
+        return error("Incorrect boolean evaluation true or false not returned")
+    else if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == true)
+        if(MeaningOf|BLOCK(<block>, s) == error)
+            return error("Semantic error in block statement")
+        return s = MeaningOf|BLOCK(<block>, s)
+    else
+        return s
+
+<if_stmt> --> if ( <bool_expr> ) <block> else <block2>
+MeaningOf|IF_STMT(if ( <bool_expr> ) <block>, s)
+    if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == error)
+        return error("Incorrect boolean evaluation true or false not returned")
+    else if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == true)
+        if(MeaningOf|BLOCK(<block>, s) == error)
+            return error("Semantic error in block statement")
+        return s = MeaningOf|BLOCK(<block>, s)
+    else if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == false)
+        if(MeaningOf|BLOCK(<block2>, s) == error)
+            return error("Semantic error in block statement")
+        return s = MeaningOf|BLOCK(<block2>, s)
+
+    
+<while_stmt> --> while ( <bool_expr> ) <block>
+MeaningOf|WHILE_STMT(while ( <bool_expr> ) <block>, s)
+    if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == error)
+        return error("Incorrect boolean evaluation true or false not returned")
+    else if(MeaningOf|BOOL_EXPR(<bool_expr>, s) == true)
+        if(MeaningOf|BLOCK(<block>, s) == error)
+            return error("Semantic error in block statement")
+        return s = MeaningOf|BLOCK(<block>, s)
+    else
+        return s
+
+<bool_expr> --> <bterm> {(`>`|`<`|`>=`|`<=`) <bterm2>
+MeaningOf|BOOL_EXPR(<bterm> {(`>`|`<`|`>=`|`<=`) <bterm2>, s)
+    if(MeaningOf|BTERM(<bterm>, s) == error)
+        return error("Bterm evaluation not returned for <bterm>")
+    else if(MeaningOf|BTERM(<bterm>, s))
+        if(MeaningOf|BTERM(<bterm2>, s) == error)
+            return error("Bterm evaluation not returned for <bterm2>")
+        else if(MeaningOf|BTERM(<bterm>, s) > MeaningOf|BTERM(<bterm2>, s))
+            return true
+        else if(MeaningOf|BTERM(<bterm>, s) >= MeaningOf|BTERM(<bterm2>, s))
+            return true
+        else if(MeaningOf|BTERM(<bterm>, s) < MeaningOf|BTERM(<bterm2>, s))
+            return true
+        else if(MeaningOf|BTERM(<bterm>, s) <= MeaningOf|BTERM(<bterm2>, s))
+            return true
+    else
+        return false
+
+<bterm> --> <band> {(`==`|`!=`) <band2>}
+MeaningOf|BTERM(<band> {(`==`|`!=`) <band2>}, s)
+    if(MeaningOf|BAND(<band>, s) == error)
+        return error("<band> did not return true or false")
+    else if(MeaningOf|BAND(<band>, s) == true)
+        if(MeaningOf|BAND(<band2>, s) == error)
+            return error("<band2> did not return true or false")
+        else if(MeaningOf|BAND(<band>, s) == MeaningOf|BAND(<band2>, s))
+            return s = MeaningOf|BAND(<band>, s
+        else if(MeaningOf|BAND(<band>, s) != MeaningOf|BAND(<band2>, s))
+            return s
+    else
+        return s
+
+<band> --> <bor> {`&&` <bor>}
+MeaningOf|BOOL_AND(<bor> && <bor2>, s)
+    if(MeaningOf|BOOL_OR(<bor>, s) == error)
+        return error("Boolean evaluation not returned for <bor>")
+    else if(MeaningOf|BOOL_OR(<bor>, s) == true)
+        if(MeaningOf|BOOL_OR(<bor2>, s) == error)
+            return error("Boolean evaluation not returned for <bor2>")
+        return MeaningOf|BOOL_OR(<bor>, s)
+    else
+        if(MeaningOf|BOOL_OR(<bor2>, s) == error)
+            return error("Boolean evaluation not returned for <bor2>)
+        return false
+
+<bor> --> <expr> {`&&` <expr2>}
+MeaningOf|BOOL_OR(<expr> {`&&` <expr2>}, s)
+    if(MeaningOf|EXPR(<expr>, s) == error)
+        return error("<expr> did not return an expression")
+    else if(MeaningOf|EXPR(<expr>, s) == true)
+        return true
+    else if(MeaningOf|EXPR(<expr2>, s) == error)
+        return error("<expr2> did not return an expression")
+    else if(MeaningOf|EXPR(<expr2>, s) == true)
+        return true
+    else
+        return false
