@@ -76,6 +76,18 @@ impl Syntax<'_> {
         }
 
         self.lexer = original_lexer.clone();
+
+        if self.parse_assign() == Some(Grammar::ASSIGN) {
+            return Some(Grammar::STMT);
+        }
+
+        self.lexer = original_lexer.clone();
+
+        if self.parse_declare() == Some(Grammar::DECLARE) {
+            return Some(Grammar::STMT);
+        }
+
+        self.lexer = original_lexer.clone();
         
         if self.parse_block() == Some(Grammar::BLOCK) {
             return Some(Grammar::STMT);
@@ -139,6 +151,57 @@ impl Syntax<'_> {
         }
 
         return Some(Grammar::UNKNOWN);
+    }
+
+    fn parse_assign(&mut self) -> Option<Grammar> {
+        if self.lexer.peek_token().is_some() && self.lexer.peek_token().unwrap().token != Tokens::IDENTIFIER {
+            return Some(Grammar::UNKNOWN);
+        }
+
+        self.lexer.next_token();
+
+        if self.lexer.peek_token().is_some() && self.lexer.peek_token().unwrap().token != Tokens::IDENTIFIER && self.lexer.peek_token().unwrap().lexeme != "=" {
+            return Some(Grammar::UNKNOWN);
+        }
+
+        self.lexer.next_token();
+
+        if self.parse_expr() != Some(Grammar::EXPRESSION) {
+            return Some(Grammar::UNKNOWN);
+        }
+        
+        return Some(Grammar::ASSIGN);
+    }
+
+    fn parse_declare(&mut self) -> Option<Grammar> {
+        if self.lexer.peek_token().is_some() && self.lexer.peek_token().unwrap().token != Tokens::IDENTIFIER && self.lexer.peek_token().unwrap().lexeme != "DataType" {
+            return Some(Grammar::UNKNOWN);
+        }
+
+        self.lexer.next_token();
+
+        if self.lexer.peek_token().is_some() && self.lexer.peek_token().unwrap().token != Tokens::IDENTIFIER {
+            return Some(Grammar::UNKNOWN);
+        }
+
+        self.lexer.next_token();
+
+        loop {
+            let peek_token = self.lexer.peek_token().clone();
+            if peek_token == None {
+                break;
+            }
+
+            if peek_token.clone().unwrap().token == Tokens::IDENTIFIER && peek_token.unwrap().lexeme == "," {
+                self.lexer.next_token();
+
+                if self.lexer.peek_token().is_some() && self.lexer.peek_token().unwrap().token == Tokens::IDENTIFIER {
+                    self.lexer.next_token();
+                } else { return Some(Grammar::UNKNOWN); }
+            } else { break; }
+        }
+
+        return Some(Grammar::DECLARE);
     }
 
     fn parse_if_stmt(&mut self) -> Option<Grammar> {
@@ -517,6 +580,8 @@ enum Grammar {
     WHILESTATEMENT,
     IFSTATEMENT,
     BLOCK,
+    ASSIGN,
+    DECLARE,
     EXPRESSION,
     TERM,
     FACT,

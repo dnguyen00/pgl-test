@@ -71,4 +71,27 @@ mod tests {
         let mut syntax = Syntax::new(lexer);
         assert_eq!(syntax.check_validity(), true);
     }
+
+    #[test]
+    fn stmt_assign() {
+        let lexer = Lexer::new("hello = 5 + 5");
+    
+        let mut syntax = Syntax::new(lexer);
+        assert_eq!(syntax.check_validity(), true);
+    }
+
+    #[test]
+    fn stmt_declare() {
+        let lexer = Lexer::new("DataType hello");
+    
+        let mut syntax = Syntax::new(lexer);
+        assert_eq!(syntax.check_validity(), true);
+    }
+
+    fn stmt_declare_complex() {
+        let lexer = Lexer::new("DataType hello, world, bob, test");
+    
+        let mut syntax = Syntax::new(lexer);
+        assert_eq!(syntax.check_validity(), true);
+    }
 }
